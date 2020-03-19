@@ -58,6 +58,44 @@
             margin: 0 auto;
         }
     </style>
+        
+    <script>
+        //이름, 주소, 휴대폰번호 중 하나라도 입력되어 있지 않으면 alert 뜨고 입력 안 한 곳에 포커스 맞추기
+        function inputNotandFocus() {
+            let inputNameVal = $("#inputName").val()
+            let inputAmountVal = $("#inputAmount").val()
+            let inputAddressVal = $("#inputAddress").val()
+            let inputPhoneVal = $("#inputPhone").val()
+
+            let phoneFormat = /^\d{3}-\d{3,4}-\d{4}$/ //휴대폰 번호 양식
+
+            //이름이 빈 칸인 경우
+            if(inputNameVal === '') {
+                alert("이름을 입력하지 않았습니다.")
+                $("#inputName").focus()
+            }   
+            //수량 선택 검사
+            else if(!$.isNumeric(inputAmountVal)) {
+                alert("수량을 선택하지 않았습니다.")
+                $("#inputAmount").focus()
+            }         
+            //주소 검사
+            else if(inputAddressVal === '') {
+                alert("주소를 입력하지 않았습니다.")
+                $("#inputAddress").focus()
+            }
+            //휴대폰번호 검사
+            else if(inputPhoneVal === '') {
+                alert("휴대폰 번호를 입력하지 않았습니다.")
+                $("#inputPhone").focus()
+            } else if(inputPhoneVal != '' && phoneFormat.test(inputPhoneVal) == false) {
+                alert("휴대폰 번호의 양식이 맞지 않습니다.")
+                $("#inputPhone").focus()
+            } else {
+                alert("결제됨")
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -116,6 +154,7 @@
                     <li class="list-group-item">
                         <label for="inputAmount" class="col-form-label">수량</label>
                         <select class="col-form-label form-control" id="inputAmount">
+                            <option>수량을 선택하세요!!!</option>
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
@@ -147,7 +186,7 @@
         </div>
 
         <!-- 버튼 -->
-        <button type="button" class="btn btn-primary btn-lg btn-block blockButton">결제하기</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block blockButton" onclick="inputNotandFocus()">결제하기</button>
     </div>
 </body>
 
