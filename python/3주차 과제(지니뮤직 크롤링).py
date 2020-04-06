@@ -12,7 +12,7 @@ i = 1
 for music in musics:
     musicName = music.select_one('td.info > a.title.ellipsis')
     singer = music.select_one('td.info > a.artist.ellipsis')
-    print(i, end=' ')
-    print(musicName.text.strip(), end=' ')
-    print(singer.text.strip())
+    print(i, end=' ') # 순위 : 단순히 1씩만 증가
+    print(musicName.text.strip(), end=' ') # 노래 제목
+    print(singer.text.strip()) # 가수
     i += 1

@@ -19,10 +19,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../homework/4주차 과제" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.3주차 과제(지니뮤직 크롤링)">
-    <configuration name="3주차 과제(지니뮤직 크롤링)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.나홀로책장">
+    <configuration name="나홀로책장" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -34,7 +35,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3주차 과제(지니뮤직 크롤링).py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/나홀로책장.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -43,7 +44,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="NaverMovieCrawling" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="4주 실습-1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -55,7 +56,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/NaverMovieCrawling.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/4주 실습-1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -64,7 +65,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="hello" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="4주차 어벤저스" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -76,7 +77,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/hello.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/4주차 어벤저스.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -85,7 +86,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="listNum" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="4주차 flask get post" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -97,7 +98,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/listNum.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/4주차 flask get post.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -106,7 +107,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="seoul" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="4주차 flask" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -118,7 +119,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/seoul.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/4주차 flask.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -129,11 +130,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.3주차 과제(지니뮤직 크롤링)" />
-        <item itemvalue="Python.NaverMovieCrawling" />
-        <item itemvalue="Python.seoul" />
-        <item itemvalue="Python.listNum" />
-        <item itemvalue="Python.hello" />
+        <item itemvalue="Python.나홀로책장" />
+        <item itemvalue="Python.4주차 flask get post" />
+        <item itemvalue="Python.4주차 flask" />
+        <item itemvalue="Python.4주차 어벤저스" />
+        <item itemvalue="Python.4주 실습-1" />
       </list>
     </recent_temporary>
   </component>
@@ -151,33 +152,41 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="0" y="96" key="#Notifications" timestamp="1585372270968">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="0" y="96" key="#Notifications/0.0.1920.1040@0.0.1920.1040" timestamp="1585372270968" />
     <state x="414" y="169" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585220139422">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="169" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585220139422" />
-    <state width="1896" height="275" key="GridCell.Tab.0.bottom" timestamp="1585287019695">
+    <state x="681" y="223" key="FileChooserDialogImpl" timestamp="1585832776917">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1896" height="275" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585287019695" />
-    <state width="1896" height="275" key="GridCell.Tab.0.center" timestamp="1585287019695">
+    <state x="681" y="223" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1585832776917" />
+    <state width="1895" height="272" key="GridCell.Tab.0.bottom" timestamp="1585832951367">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1896" height="275" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585287019695" />
-    <state width="1896" height="275" key="GridCell.Tab.0.left" timestamp="1585287019691">
+    <state width="1895" height="272" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585832951367" />
+    <state width="1895" height="272" key="GridCell.Tab.0.center" timestamp="1585832951366">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1896" height="275" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585287019691" />
-    <state width="1896" height="275" key="GridCell.Tab.0.right" timestamp="1585287019695">
+    <state width="1895" height="272" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585832951366" />
+    <state width="1895" height="272" key="GridCell.Tab.0.left" timestamp="1585832951365">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1896" height="275" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585287019695" />
-    <state x="0" y="82" key="SettingsEditor" timestamp="1585222534794">
+    <state width="1895" height="272" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585832951365" />
+    <state width="1895" height="272" key="GridCell.Tab.0.right" timestamp="1585832951367">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="82" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585222534794" />
-    <state x="664" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1585218880197">
+    <state width="1895" height="272" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585832951367" />
+    <state x="133" y="89" key="SettingsEditor" timestamp="1585655384175">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="664" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585218880197" />
+    <state x="133" y="89" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585655384175" />
+    <state x="664" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1585297676565">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="664" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585297676565" />
   </component>
 </project>
