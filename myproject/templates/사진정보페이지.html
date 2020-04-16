@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            connect();
+            mapping();
+        });
+
+        function print_inform(lat, lng, date, weather, equip, prog, etc) {
+            temp_html = `<div>
+            위도 : <span id="lat">${lat}</span>
+        </div>
+        <div>
+            경도 : <span id="lng">${lng}</span>
+        </div>        
+
+        <!-- 사진 정보들 기입 div -->
+        <div>
+            <!-- 첨부된 사진 보여주기 -->
+            <div id="uploadImg">
+                <img id="img" />
+            </div>
+        </div>
+
+        <div>
+            <!-- 날짜 입력 -->
+            <div>
+                날짜 : ${date}
+            </div>
+            <!-- 날씨 입력 -->
+            <div>
+                날씨 : ${weather}
+            </div>
+            <!-- 촬영 기기 입력 -->
+            <div>
+                촬영 기기 : ${equip}
+            </div>
+            <!-- 보정 프로그램 입력 -->
+            <div>
+                보정 프로그램 : ${prog}
+            </div>
+            <!-- 기타 촬영기법 입력(텍스트 구문으로) -->
+            <div>
+                기타 촬영기법 : <br />
+                ${etc}
+            </div>
+        </div>`;
+            $('#inform').append(temp_html);
+        }
+    </script>
+    <title>사진 정보 페이지</title>
+</head>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="http://localhost:5000">Take A Picture : TAP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:5000">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:5000/regisphoto">Upload</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:5000/gallery">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body>
+    <div style="margin-top: 100px;" id="photoUuid">{{ photoUUID }}</div>
+    <br />
+
+    <div id="map" style="width:600px;height:350px;"></div>
+
+    <script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=777480c2599b2a751a4396500c8bb796&libraries=services"></script>
+    <script>
+        function connect() {
+            var photoUuid = $('#photoUuid').html();
+
+            var URL = "http://localhost:5000/photo_inform/" + String(photoUuid);
+            console.log(URL);
+
+            $.ajax({
+                type: "POST",
+                url: URL,
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        console.log(response)
+                        photo = response['photo_inform'][0];
+                        console.log(photo)
+                        var photo_lat = photo['lat']
+                        var photo_lng = photo['lng']
+                        var photo_date = photo['date']
+                        var photo_weather = photo['weather']
+                        var photo_equip = photo['equipment']
+                        var photo_prog = photo['program']
+                        var photo_etc = photo['etc']
+                        print_inform(photo_lat, photo_lng, photo_date, photo_weather, photo_equip, photo_prog, photo_etc)
+
+                        var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                            mapOption = {
+                                center: new kakao.maps.LatLng(photo_lat, photo_lng), // 지도의 중심좌표
+                                level: 3 // 지도의 확대 레벨
+                            };
+
+                        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+                        // 마커가 표시될 위치입니다 
+                        var markerPosition = new kakao.maps.LatLng(photo_lat, photo_lng);
+
+                        // 마커를 생성합니다
+                        var marker = new kakao.maps.Marker({
+                            position: markerPosition
+                        });
+
+                        // 마커가 지도 위에 표시되도록 설정합니다
+                        marker.setMap(map);
+                    }
+                }
+            })
+        }
+    </script>
+
+    <!-- 지도에 마커 찍으면 자동으로 위도, 경도가 출력 중 -->
+    <div id="inform">
+
+    </div>
+
+</body>
+
+</html>

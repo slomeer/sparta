@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script>
+        function make_one_photo(photo_uuid, img_src) {
+            let photo_inform = "http://localhost:5000/photo_inform/" + photo_uuid;
+            var temp_html = `<div class="col-lg-3 col-md-4 col-6">
+                <a href="${photo_inform}" class="d-block mb-4 h-100">
+                    <img class="img-fluid img-thumbnail" src="${img_src}" alt="">
+                </a>
+            </div>`
+            $('#gallery').append(temp_html);
+        }
+
+        function listing() {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:5000/gallery",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        photos = response['photos'];
+                        for(let i=0; i<photos.length; i++) {
+                            make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                        }
+                    } else {
+                        alert("실패")
+                    }
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            listing();
+        })
+    </script>
+    <title>갤러리</title>
+</head>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="http://localhost:5000">Take A Picture : TAP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:5000">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:5000/regisphoto">Upload</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="http://localhost:5000/gallery">Gallery
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<body>
+    <!-- Page Content -->
+    <div class="container" style="margin-top: 100px;">
+
+        <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">Gallery</h1>
+
+        <hr class="mt-2 mb-5">
+
+        <div class="row text-center text-lg-left" id="gallery">
+            <!-- 갤러리에 들어가는 형식(혹시나 까먹을까봐 주석처리) -->
+            <!-- <div class="col-lg-3 col-md-4 col-6">
+                <a href="#" class="d-block mb-4 h-100">
+                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
+                </a>
+            </div> -->
+        </div>
+    </div>
+</body>
+
+</html>

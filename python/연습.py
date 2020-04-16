@@ -1,64 +1,25 @@
-class SLinkedList:
-    class Node:
-        def __init__(self, v, n = None):
-            self.value = v
-            self.next = n
+#!/bin/python3
 
-    def __init__(self):
-        self.head = None
+import math
+import os
+import random
+import re
+import sys
 
-    def insertNode(self, v):
-        if self.head is None:
-            self.head = self.Node(v)
-        else:
-            self.head = self.Node(v, self.head)
+if __name__ == '__main__':
+    t = int(input())
 
-    def printNode(self):
-        if self.head is None:
-            print("저장된 데이터가 없음")
-            return
-        else:
-            print("<현재 리스트 구조>", end="\t")
+    for t_itr in range(t):
+        nk = input().split()
 
-            link = self.head
+        n = int(nk[0])
 
-            while link:
-                print(link.value, '->', end=' ')
-                link = link.next
-            print()
+        k = int(nk[1])
+        max = 0
 
-    def deleteNode(self):
-        if self.head is None:
-            print("삭제할 노드가 없습니다.")
-            return
-        else:
-            self.head = self.head.next
+        for i in range(1, n):
+            for j in range(i + 1, n + 1):
+                if k > i & j > max:
+                    max = i & j
 
-    def searchNode(self, v):
-        if self.head is None:
-            print("저장된 데이터가 없음")
-            return
-        else:
-            link = self.head
-
-            index = 0
-            while link:
-                if v == link.value:
-                    return index
-                else:
-                    link = link.next
-                    index += 1
-
-if __name__=="__main__":
-    s1 = SLinkedList()
-
-    s1.insertNode('1st')
-    s1.insertNode('2nd')
-    s1.insertNode('3rd')
-
-    print("<위치 탐색>")
-    result = s1.searchNode('1st')
-    print("1st의 위치 : {}".format(result))
-
-    result = s1.searchNode('555')
-    print("555의 위치 : {}".format(result))
+        print(max)
