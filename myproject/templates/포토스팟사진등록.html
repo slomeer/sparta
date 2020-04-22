@@ -66,44 +66,37 @@
     <!-- JS 입력 -->
     <script>
         // 사진 첨부하고 웹 페이지에 보여주기
-        var sel_file;
+        let sel_file;
 
-        $(document).ready(function () {
-            $('#inputImg').on("change", handleImgFileSelect);
-        });
 
-        function handleImgFileSelect(e) {
-            var files = e.target.files;
-            var filesArr = Array.prototype.slice.call(files);
-
-            filesArr.forEach(function (f) {
-                if (!f.type.match("image.*")) {
-                    alert("확장자는 이미지 확장자만 가능!!!");
-                    return;
-                }
-
-                sel_file = f;
-
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $("#img").attr("src", e.target.result);
-                }
-                reader.readAsDataURL(f);
+        $(function () {
+            $('#inputImg').on("change", function () {
+                readInputFile(this);
+                photo_meta();
             });
+        })
+
+        function readInputFile(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+                //console.log(reader)
+            };
         }
 
         function photo_meta() {
             // 첨부된 사진의 메타 데이터 불러오기
-            // id=img인 이미지 파일을 변수로 저장
-            var imgElem = document.getElementById('img');
-
+            // id=img인 이미지를 변수로 저장
+            let imgElem = document.getElementById('img');
+            console.log(imgElem)
             // 같은 페이지 안에서 이미지가 바뀌는 경우 이전의 메타데이터 정보를 지워주어야 함.
             imgElem.exifdata = null;
-
             EXIF.getData(imgElem, function () {
-                var make = EXIF.getTag(this, "Make"); //"Make" 항목만 확인
-                console.log(make);
-                var allMetaData = EXIF.getAllTags(this); // 모든 EXIF 정보
+                let allMetaData = EXIF.getAllTags(imgElem); // 모든 EXIF 정보
+                console.log(allMetaData)
                 console.log(JSON.stringify(allMetaData, null, "\t"));
             })
         }
@@ -154,25 +147,25 @@
         </div>
     </div>
     <script>
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        let mapContainer = document.getElementById('map'), // 지도를 표시할 div 
             mapOption = {
                 center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
                 level: 4 // 지도의 확대 레벨
             };
 
         // 지도 생성
-        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+        let map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
         // 주소-좌표 변환 객체를 생성합니다
         let geocoder = new kakao.maps.services.Geocoder();
 
         // 지도를 클릭한 위치에 표출할 마커입니다
-        var marker = new kakao.maps.Marker({
+        let marker = new kakao.maps.Marker({
             // 지도 중심좌표에 마커를 생성합니다 
             position: map.getCenter()
         });
         // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
-        var infowindow = new kakao.maps.InfoWindow({ zindex: 1 });
+        let infowindow = new kakao.maps.InfoWindow({ zindex: 1 });
 
         // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
         searchAddrFromCoords(map.getCenter(), displayCenterInfo);
@@ -185,10 +178,10 @@
         kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
             searchDetailAddrFromCoords(mouseEvent.latLng, function (result, status) {
                 if (status === kakao.maps.services.Status.OK) {
-                    var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+                    let detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
                     detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
 
-                    var content = '<div class="bAddr">' +
+                    let content = '<div class="bAddr">' +
                         '<span class="title">법정동 주소정보</span>' +
                         detailAddr +
                         '</div>';
@@ -201,24 +194,24 @@
                     infowindow.setContent(content);
                     infowindow.open(map, marker);
 
-                    var address_string = result[0].address.address_name;
-                    var addrResult = `<p id="addrVal">${address_string}</p>`
-                    var addrDiv = document.getElementById('addr');
+                    let address_string = result[0].address.address_name;
+                    let addrResult = `<p id="addrVal">${address_string}</p>`
+                    let addrDiv = document.getElementById('addr');
                     addrDiv.innerHTML = addrResult;
                 }
             });
 
             // 클릭한 위도, 경도 정보를 가져옵니다 
-            var latlng = mouseEvent.latLng;
+            let latlng = mouseEvent.latLng;
 
-            var lat = latlng.getLat();
-            var lng = latlng.getLng();
+            let lat = latlng.getLat();
+            let lng = latlng.getLng();
 
-            var latResult = `<p id="latVal">${lat}</p>`
-            var lngResult = `<p id="lngVal">${lng}</p>`
+            let latResult = `<p id="latVal">${lat}</p>`
+            let lngResult = `<p id="lngVal">${lng}</p>`
 
-            var latDiv = document.getElementById('lat');
-            var lngDiv = document.getElementById('lng');
+            let latDiv = document.getElementById('lat');
+            let lngDiv = document.getElementById('lng');
 
             latDiv.innerHTML = latResult;
             lngDiv.innerHTML = lngResult;
@@ -242,9 +235,9 @@
         // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
         function displayCenterInfo(result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                var infoDiv = document.getElementById('centerAddr');
+                let infoDiv = document.getElementById('centerAddr');
 
-                for (var i = 0; i < result.length; i++) {
+                for (let i = 0; i < result.length; i++) {
                     // 행정동의 region_type 값은 'H' 이므로
                     if (result[i].region_type === 'H') {
                         infoDiv.innerHTML = result[i].address_name;
@@ -264,42 +257,45 @@
 
         // 포토 스팟의 위도, 경도 및 사진 정보 저장
         function regis_photo() {
-            var lat = $('#latVal').text();
-            var lng = $('#lngVal').text();
+            let lat = $('#latVal').text();
+            let lng = $('#lngVal').text();
 
-            var doh = $('#addrVal').text().split(' ')[0];
-            var siGoonGu = $('#addrVal').text().split(' ')[1];
+            let doh = $('#addrVal').text().split(' ')[0];
+            let siGoonGu = $('#addrVal').text().split(' ')[1];
 
-            var photo = jQuery('#img').attr('src');
-            var date = $('#input_date').val();
-            var weather = $('input[name="weather"]:checked').val();
-            var equipment = $('#input_equipment').val();
-            var program = $('#input_program').val();
-            var etc = $('#input_etc').val();;
+            let photo = jQuery('#img').attr('src');
+            let date = $('#input_date').val();
+            let weather = $('input[name="weather"]:checked').val();
+            let equipment = $('#input_equipment').val();
+            let program = $('#input_program').val();
+            let etc = $('#input_etc').val();;
 
-            var photo_uuid = guid();
-
-            $.ajax({
-                type: "POST",
-                url: "http://localhost:5000/regisphoto",
-                data: {
-                    lat_give: lat,
-                    lng_give: lng,
-                    doh_give: doh,
-                    siGoonGu_give: siGoonGu,
-                    photo_give: photo,
-                    date_give: date,
-                    weather_give: weather,
-                    equipment_give: equipment,
-                    program_give: program,
-                    etc_give: etc,
-                    photo_uuid_give: photo_uuid
-                },
-                success: function (response) {
-                    alert(response['msg']);
-                    window.location.reload();
-                }
-            })
+            let photo_uuid = guid();
+            if (lat == '') {
+                alert("좌표를 찍지 않았습니다!! 지도에 마킹을 해주세요")
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:5000/regisphoto",
+                    data: {
+                        lat_give: lat,
+                        lng_give: lng,
+                        doh_give: doh,
+                        siGoonGu_give: siGoonGu,
+                        photo_give: photo,
+                        date_give: date,
+                        weather_give: weather,
+                        equipment_give: equipment,
+                        program_give: program,
+                        etc_give: etc,
+                        photo_uuid_give: photo_uuid
+                    },
+                    success: function (response) {
+                        alert(response['msg']);
+                        window.location.reload();
+                    }
+                })
+            }
         }
     </script>
 
@@ -324,9 +320,10 @@
 
     <div>
         <!-- 사진 첨부하기(일단 첨부할 때 이미지 파일만 보이게 하기) -->
-        <form action="" method="post" enctype="multipart/form-data" name="">
+        <form action="" method="post" name="">
             <!-- 파일 첨부할 때 일단 이미지 파일만 보이게 한다, 모든 파일 보이게 설정하면 이미지 파일 말고도 첨부는 가능하더라 -->
-            <input type="file" id="inputImg" name="FileName" accept="image/gif, image/jpeg, image/png">
+            <input type="file" id="inputImg" name="FileName" accept="image/gif, image/jpeg, image/png" required
+                multiple>
         </form>
         <!-- 날짜 입력 -->
         <div>
