@@ -27,6 +27,78 @@
     <style>
         @charset "utf-8";
 
+        html,
+        body {
+            height: 100%;
+        }
+
+        .main-head {
+            height: 150px;
+            background: #FFF;
+
+        }
+
+        .sidenav {
+            height: 100%;
+            background-color: #000;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+
+        .main {
+            padding: 0px 10px;
+        }
+
+        @media screen {
+            .sidenav {
+                padding-top: 15px;
+            }
+        }
+
+        @media screen {
+            .login-form {
+                /* margin-top: 10%; */
+            }
+
+            .register-form {
+                margin-top: 10%;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            .main {
+                margin-left: 70%;
+            }
+
+            .sidenav {
+                width: 70%;
+                height: 922px;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+            }
+
+            .login-form {
+                margin-top: 70px;
+            }
+
+            .register-form {
+                margin-top: 40%;
+            }
+        }
+
+        .btn-black {
+            background-color: #000 !important;
+            color: #fff;
+        }
+
+        #inform {
+            padding: 0px;
+        }
+
+
         #img {
             width: 500px;
             height: 400px;
@@ -37,6 +109,13 @@
             display: block;
         }
 
+        hr {
+            height: 1px;
+            background: #bbb;
+            background-image: -webkit-linear-gradient(left, #eee, #777, #eee);
+        }
+
+        /* 지도 중심 기준 주소 나오는 회색창 */
         .hAddr {
             position: absolute;
             left: 10px;
@@ -46,7 +125,7 @@
             background: rgba(255, 255, 255, 0.8);
             z-index: 1;
             padding: 5px;
-            margin-top: 100px;
+            margin-top: 80px;
         }
 
         #centerAddr {
@@ -61,6 +140,98 @@
             overflow: hidden;
             white-space: nowrap;
         }
+
+        /* 사용자 컨트롤(지도) */
+        .mapUserControl {
+            display: block;
+            margin-top: 80px;
+        }
+
+        .radius_border {
+            border: 1px solid #919191;
+            border-radius: 5px;
+        }
+
+        .custom_typecontrol {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            overflow: hidden;
+            width: 130px;
+            height: 30px;
+            margin: 0;
+            margin-top: 80px;
+            padding: 0;
+            z-index: 1;
+            font-size: 12px;
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+
+        .custom_typecontrol span {
+            display: block;
+            width: 65px;
+            height: 30px;
+            float: left;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        .custom_typecontrol .btn {
+            background: #fff;
+            background: linear-gradient(#fff, #e6e6e6);
+        }
+
+        .custom_typecontrol .btn:hover {
+            background: #f5f5f5;
+            background: linear-gradient(#f5f5f5, #e3e3e3);
+        }
+
+        .custom_typecontrol .btn:active {
+            background: #e6e6e6;
+            background: linear-gradient(#e6e6e6, #fff);
+        }
+
+        .custom_typecontrol .selected_btn {
+            color: #fff;
+            background: #425470;
+            background: linear-gradient(#425470, #5b6d8a);
+        }
+
+        .custom_typecontrol .selected_btn:hover {
+            color: #fff;
+        }
+
+        .custom_zoomcontrol {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            width: 36px;
+            height: 80px;
+            overflow: hidden;
+            z-index: 1;
+            background-color: #f5f5f5;
+            margin-top: 80px;
+        }
+
+        .custom_zoomcontrol span {
+            display: block;
+            width: 36px;
+            height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .custom_zoomcontrol span img {
+            width: 15px;
+            height: 15px;
+            padding: 12px 0;
+            border: none;
+        }
+
+        .custom_zoomcontrol span:first-child {
+            border-bottom: 1px solid #bfbfbf;
+        }
     </style>
 
     <!-- JS 입력 -->
@@ -68,37 +239,81 @@
         // 사진 첨부하고 웹 페이지에 보여주기
         let sel_file;
 
-
         $(function () {
             $('#inputImg').on("change", function () {
-                readInputFile(this);
-                photo_meta();
+                readInputFile(this).then(function (resolvedData) {
+                    photo_meta(resolvedData);
+                });
             });
         })
 
         function readInputFile(input) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#img').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-                //console.log(reader)
-            };
+            return new Promise(function (resolve, reject) {
+                if (input.files && input.files[0]) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#img').attr('src', e.target.result);
+                        resolve(document.getElementById('img'));
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                    //console.log(reader)                    
+                };
+            });
         }
 
-        function photo_meta() {
+        function photo_meta(imgElem) {
             // 첨부된 사진의 메타 데이터 불러오기
             // id=img인 이미지를 변수로 저장
-            let imgElem = document.getElementById('img');
+            // let imgElem = document.getElementById('img');
             console.log(imgElem)
             // 같은 페이지 안에서 이미지가 바뀌는 경우 이전의 메타데이터 정보를 지워주어야 함.
             imgElem.exifdata = null;
             EXIF.getData(imgElem, function () {
                 let allMetaData = EXIF.getAllTags(imgElem); // 모든 EXIF 정보
-                console.log(allMetaData)
                 console.log(JSON.stringify(allMetaData, null, "\t"));
+
+                let exifLat = EXIF.getTag(imgElem, "GPSLatitude");
+                console.log(exifLat);
+
+                if (Object.keys(allMetaData).length != 0) {
+                    // 필요한 데이터 뽑아내기
+                    let make = allMetaData["Make"]; // 카메라 회사
+                    let model = allMetaData["Model"]; // 카메라 기종명
+                    let software = allMetaData["Software"]; // 보정 프로그램
+                    let date = allMetaData["DateTimeOriginal"].split(' ')[0]; // 찍은 날짜
+                    let time = allMetaData["DateTimeOriginal"].split(' ')[1]; // 찍은 시간
+
+                    console.log(make, model, software, date, time)
+
+                    // 자동으로 정보 입력해줌
+                    autoInsert(make, model, software, date, time);
+                } else {
+                    alert("사진에 메타데이터가 없습니다. 정보들을 직접 입력해주세요 ㅜㅜ")
+                    $('#input_date').val('')
+                    $('#input_time').val('')
+                    $('#input_equipment').val('')
+                    $('#input_program').val('')
+                }
             })
+        }
+
+        function autoInsert(make, model, software, date, time) {
+            // 카메라 기종명에 카메라 회사 이름이 겹치는 경우가 있음
+            // 카메라 기종명에서 회사 이름만 떼서 회사 이름 + 카메라 모델명 붙여서 출력
+            if (make.includes(model.split(' ')[0])) {
+                equipment = make + ' ' + model.split(' ').slice(1);
+                equipment = equipment.replace(/,/gi, ' ');
+            } else {
+                equipment = make + ' ' + model
+            }
+            // 사진 메타 데이터에서는 날짜 형식이 "yyyy:mm:dd"로 되어 있어서 "yyyy-mm-dd" 형식으로 바꿔줘야 입력이 된다.
+            date = date.replace(/:/gi, '-');
+            // 항목 중 값이 없는 경우도 있다.("undefined"로 나옴), 그리고 보정 프로그램 이름이 이상하게 나오는 경우가 있음
+
+            $('#input_date').val(date)
+            $('#input_time').val(time)
+            $('#input_equipment').val(equipment)
+            $('#input_program').val(software)
         }
     </script>
 
@@ -127,7 +342,7 @@
                     <a class="nav-link" href="http://localhost:5000/gallery">Gallery</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="http://localhost:5000/login">Log In</a>
                 </li>
             </ul>
         </div>
@@ -135,22 +350,194 @@
 </nav>
 
 <body>
-    <!-- 카카오맵 API 가져오기 -->
-    <script type="text/javascript"
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=777480c2599b2a751a4396500c8bb796&libraries=services"></script>
-    <!-- 지도중심기준 행정동 주소정보 보여주는 박스 -->
-    <div class="map_wrap" style="margin-top: 100px;">
-        <div id="map" style="width:600px;height:600px;"></div>
-        <div class="hAddr">
-            <div class="title">지도중심기준 행정동 주소정보</div>
-            <div id="centerAddr"></div>
+    <div class="sidenav">
+        <div class="login-main-text">
+            <!-- 카카오맵 API 가져오기 -->
+            <script type="text/javascript"
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=777480c2599b2a751a4396500c8bb796&libraries=services"></script>
+            <!-- 지도중심기준 행정동 주소정보 보여주는 박스 -->
+            <div class="map_wrap">
+                <div id="map" style="width:100%;height: 918px;"></div>
+                <div class="hAddr">
+                    <div class="title">지도중심기준 행정동 주소정보</div>
+                    <div id="centerAddr"></div>
+                </div>
+
+                <!-- 사용자 컨트롤 전체 div -->
+                <div class="mapUserControl">
+                    <!-- 지도타입 컨트롤 div 입니다 -->
+                    <div class="custom_typecontrol radius_border">
+                        <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+                        <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+                    </div>
+                    <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+                    <div class="custom_zoomcontrol radius_border">
+                        <span onclick="zoomIn()"><img
+                                src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"
+                                style="z-index: 8;"></span>
+                        <span onclick="zoomOut()"><img
+                                src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
+                                alt="축소"></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="main">
+        <!-- col-md-6 col-sm-12  -->
+        <div class="login-form">
+            <div class="inform">
+                <!-- 사진 정보들 기입 div -->
+                <div>
+                    <!-- 첨부된 사진 보여주기 -->
+                    <div id="uploadImg">
+                        <img id="img" />
+                    </div>
+                </div>
+                <!-- 사진 첨부하기(일단 첨부할 때 이미지 파일만 보이게 하기) -->
+                <form action="" method="post" name="">
+                    <!-- 파일 첨부할 때 일단 이미지 파일만 보이게 한다, 모든 파일 보이게 설정하면 이미지 파일 말고도 첨부는 가능하더라 -->
+                    <input type="file" id="inputImg" name="FileName" accept="image/gif, image/jpeg, image/png" required
+                        multiple>
+                </form>
+
+                <hr />
+
+                <!-- 지도에 마커 찍으면 자동으로 위도, 경도가 출력 중 -->
+                <!-- <div id="lat">
+                        위도 : <span id="spanLat"></span>
+                    </div> -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">위도</span>
+                    </div>
+                    <input type="text" class="form-control" id="spanLat" aria-describedby="basic-addon3">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">경도</span>
+                    </div>
+                    <input type="text" class="form-control" id="spanLng" aria-describedby="basic-addon3">
+                </div>
+
+                <hr />
+
+                <!-- 지도에 마커 찍으면 지번 주소 출력 -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">주소</span>
+                    </div>
+                    <input type="text" class="form-control" id="spanAddr" aria-describedby="basic-addon3">
+                </div>
+
+                <hr />
+
+                <!-- 날짜 입력 -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">날짜</span>
+                    </div>
+                    <input type="date" class="form-control" id="input_date" aria-describedby="basic-addon3">
+                </div>
+
+                <hr />
+
+                <!-- 시간 입력 -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">시간</span>
+                    </div>
+                    <input type="time" class="form-control" id="input_time" aria-describedby="basic-addon3">
+                </div>
+
+                <hr />
+
+                <!-- 날씨 입력 -->
+                <!-- <div>
+                        날씨 : <input type="radio" name="weather" value="기억안남" checked="checked">기억 안남
+                        <input type="radio" name="weather" value="맑음">맑음
+                        <input type="radio" name="weather" value="흐림">흐림
+                        <input type="radio" name="weather" value="비">비
+                        <input type="radio" name="weather" value="눈">눈
+                    </div> -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">날씨</span>
+                    </div>
+
+                    <input type="radio" class="form-control" aria-describedby="basic-addon3" name="weather" value="기억안남"
+                        checked="checked">기억 안남
+                    <input type="radio" class="form-control" aria-describedby="basic-addon3" name="weather"
+                        value="맑음">맑음
+                    <input type="radio" class="form-control" aria-describedby="basic-addon3" name="weather"
+                        value="흐림">흐림
+                    <input type="radio" class="form-control" aria-describedby="basic-addon3" name="weather" value="비">비
+                    <input type="radio" class="form-control" aria-describedby="basic-addon3" name="weather" value="눈">눈
+                </div>
+
+                <hr />
+
+                <!-- 촬영 기기 입력 -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">촬영 기기</span>
+                    </div>
+                    <input type="text" class="form-control" id="input_equipment" aria-describedby="basic-addon3">
+                </div>
+
+                <hr />
+
+                <!-- 보정 프로그램 입력 -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">보정 프로그램</span>
+                    </div>
+                    <input type="text" class="form-control" id="input_program" aria-describedby="basic-addon3">
+                </div>
+
+                <hr />
+
+                <!-- 기타 촬영기법 입력(텍스트 구문으로) -->
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">기타 촬영기법</span>
+                    </div>
+                    <textarea class="form-control" aria-label="With textarea" id="input_etc" rows="6"></textarea>
+                </div>
+
+                <hr />
+
+                <!-- 등록 버튼 -->
+                <div>
+                    <button type="button" class="btn btn-secondary btn-lg btn-block" onclick="regis_photo()">
+                        등록
+                    </button>
+                </div>
+            </div>
+
+            <!-- <form>
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" class="form-control" placeholder="User Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-black">Login</button>
+                    <button type="submit" class="btn btn-secondary">Register</button>
+                </form> -->
+        </div>
+    </div>
+    </div>
+
+
+
     <script>
         let mapContainer = document.getElementById('map'), // 지도를 표시할 div 
             mapOption = {
-                center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                level: 4 // 지도의 확대 레벨
+                center: new kakao.maps.LatLng(37.511325, 126.978648), // 지도의 중심좌표
+                level: 6 // 지도의 확대 레벨
             };
 
         // 지도 생성
@@ -195,9 +582,8 @@
                     infowindow.open(map, marker);
 
                     let address_string = result[0].address.address_name;
-                    let addrResult = `<p id="addrVal">${address_string}</p>`
-                    let addrDiv = document.getElementById('addr');
-                    addrDiv.innerHTML = addrResult;
+                    let addrResult = `<span id="addrVal">${address_string}</span>`
+                    $('#spanAddr').val(address_string);
                 }
             });
 
@@ -207,14 +593,12 @@
             let lat = latlng.getLat();
             let lng = latlng.getLng();
 
-            let latResult = `<p id="latVal">${lat}</p>`
-            let lngResult = `<p id="lngVal">${lng}</p>`
+            let latResult = `<span id="latVal">${lat}</span>`
+            let lngResult = `<span id="lngVal">${lng}</span>`
 
-            let latDiv = document.getElementById('lat');
-            let lngDiv = document.getElementById('lng');
+            $('#spanLat').val(lat);
+            $('#spanLng').val(lng);
 
-            latDiv.innerHTML = latResult;
-            lngDiv.innerHTML = lngResult;
         });
 
         // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
@@ -247,6 +631,31 @@
             }
         }
 
+        // 지도타입 컨트롤의 지도 또는 스카이뷰 버튼을 클릭하면 호출되어 지도타입을 바꾸는 함수입니다
+        function setMapType(maptype) {
+            var roadmapControl = document.getElementById('btnRoadmap');
+            var skyviewControl = document.getElementById('btnSkyview');
+            if (maptype === 'roadmap') {
+                map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+                roadmapControl.className = 'selected_btn';
+                skyviewControl.className = 'btn';
+            } else {
+                map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+                skyviewControl.className = 'selected_btn';
+                roadmapControl.className = 'btn';
+            }
+        }
+
+        // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+        function zoomIn() {
+            map.setLevel(map.getLevel() - 1);
+        }
+
+        // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+        function zoomOut() {
+            map.setLevel(map.getLevel() + 1);
+        }
+
         // 사진마다 고유값 uuid 생성
         function guid() {
             function s4() {
@@ -257,22 +666,115 @@
 
         // 포토 스팟의 위도, 경도 및 사진 정보 저장
         function regis_photo() {
-            let lat = $('#latVal').text();
-            let lng = $('#lngVal').text();
+            let lat = $('#spanLat').val();
+            let lng = $('#spanLng').val();
+            console.log(lat)
+            console.log(lng)
 
-            let doh = $('#addrVal').text().split(' ')[0];
-            let siGoonGu = $('#addrVal').text().split(' ')[1];
+            let siDoh = $('#spanAddr').val().split(' ')[0];
+            let siGoonGu = $('#spanAddr').val().split(' ')[1];
+            console.log($('#spanAddr').val())
 
             let photo = jQuery('#img').attr('src');
             let date = $('#input_date').val();
+            let time = $('#input_time').val();
             let weather = $('input[name="weather"]:checked').val();
             let equipment = $('#input_equipment').val();
             let program = $('#input_program').val();
             let etc = $('#input_etc').val();;
 
             let photo_uuid = guid();
-            if (lat == '') {
-                alert("좌표를 찍지 않았습니다!! 지도에 마킹을 해주세요")
+
+            if (photo == null) {
+                alert("업로드한 사진이 없습니다. \n다시 확인해주세요.")
+            } else if (lat == '') {
+                alert("등록에 실패했습니다. \n 좌표를 찍지 않았습니다!! \n지도에 마킹을 해주세요")
+            } else if( date == '' || time == '' || equipment == '' || program == '') {
+                alert("빈 항목이 있습니다. 다시 확인해주세요.")
+            } else if (weather == '기억안남' && etc == '') {
+                let two_confirm = confirm("날씨가 '기억 안남' 체크 중입니다. \n기타 촬영기법이 빈 칸입니다. \n그래도 등록하시겠습니까?");
+                if (two_confirm == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:5000/regisphoto",
+                        data: {
+                            lat_give: lat,
+                            lng_give: lng,
+                            siDoh_give: siDoh,
+                            siGoonGu_give: siGoonGu,
+                            photo_give: photo,
+                            date_give: date,
+                            time_give: time,
+                            weather_give: weather,
+                            equipment_give: equipment,
+                            program_give: program,
+                            etc_give: etc,
+                            photo_uuid_give: photo_uuid
+                        },
+                        success: function (response) {
+                            alert(response['msg']);
+                            window.location.reload();
+                        }
+                    })
+                } else {
+                    alert("두 항목을 다시 확인해주세요.")
+                }
+            } else if (weather == '기억안남') {
+                let weather_confirm = confirm("날씨가 '기억 안남' 체크 중입니다. 그래도 등록하시겠습니까?");
+                if (weather_confirm == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:5000/regisphoto",
+                        data: {
+                            lat_give: lat,
+                            lng_give: lng,
+                            siDoh_give: siDoh,
+                            siGoonGu_give: siGoonGu,
+                            photo_give: photo,
+                            date_give: date,
+                            time_give: time,
+                            weather_give: weather,
+                            equipment_give: equipment,
+                            program_give: program,
+                            etc_give: etc,
+                            photo_uuid_give: photo_uuid
+                        },
+                        success: function (response) {
+                            alert(response['msg']);
+                            window.location.reload();
+                        }
+                    })
+                } else {
+                    alert("날씨를 체크해주세요.")
+                }
+            } else if (etc == '') {
+                let etc_confirm = confirm("기타 촬영기법이 빈 칸입니다. 그래도 등록하시겠습니까?");
+                if (etc_confirm == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:5000/regisphoto",
+                        data: {
+                            lat_give: lat,
+                            lng_give: lng,
+                            siDoh_give: siDoh,
+                            siGoonGu_give: siGoonGu,
+                            photo_give: photo,
+                            date_give: date,
+                            time_give: time,
+                            weather_give: weather,
+                            equipment_give: equipment,
+                            program_give: program,
+                            etc_give: etc,
+                            photo_uuid_give: photo_uuid
+                        },
+                        success: function (response) {
+                            alert(response['msg']);
+                            window.location.reload();
+                        }
+                    })
+                } else {
+                    alert("촬영기법에 대해 말해주세요.")
+                }
             } else {
                 $.ajax({
                     type: "POST",
@@ -280,10 +782,11 @@
                     data: {
                         lat_give: lat,
                         lng_give: lng,
-                        doh_give: doh,
+                        siDoh_give: siDoh,
                         siGoonGu_give: siGoonGu,
                         photo_give: photo,
                         date_give: date,
+                        time_give: time,
                         weather_give: weather,
                         equipment_give: equipment,
                         program_give: program,
@@ -298,64 +801,6 @@
             }
         }
     </script>
-
-    <!-- 지도에 마커 찍으면 자동으로 위도, 경도가 출력 중 -->
-    <div id="lat">
-    </div>
-    <div id="lng">
-    </div>
-
-    <!-- 지도에 마커 찍으면 지번 주소 출력 -->
-    <div id="addr">
-
-    </div>
-
-    <!-- 사진 정보들 기입 div -->
-    <div>
-        <!-- 첨부된 사진 보여주기 -->
-        <div id="uploadImg">
-            <img id="img" />
-        </div>
-    </div>
-
-    <div>
-        <!-- 사진 첨부하기(일단 첨부할 때 이미지 파일만 보이게 하기) -->
-        <form action="" method="post" name="">
-            <!-- 파일 첨부할 때 일단 이미지 파일만 보이게 한다, 모든 파일 보이게 설정하면 이미지 파일 말고도 첨부는 가능하더라 -->
-            <input type="file" id="inputImg" name="FileName" accept="image/gif, image/jpeg, image/png" required
-                multiple>
-        </form>
-        <!-- 날짜 입력 -->
-        <div>
-            날짜 : <input type="date" id="input_date">
-        </div>
-        <!-- 날씨 입력 -->
-        <div>
-            날씨 : <input type="radio" name="weather" value="맑음" checked="checked">맑음
-            <input type="radio" name="weather" value="흐림">흐림
-            <input type="radio" name="weather" value="비">비
-            <input type="radio" name="weather" value="눈">눈
-        </div>
-        <!-- 촬영 기기 입력 -->
-        <div>
-            촬영 기기 : <input type="text" name="address" size="20" id="input_equipment">
-        </div>
-        <!-- 보정 프로그램 입력 -->
-        <div>
-            보정 프로그램 : <input type="text" name="address" size="20" id="input_program">
-        </div>
-        <!-- 기타 촬영기법 입력(텍스트 구문으로) -->
-        <div>
-            기타 촬영기법 : <br />
-            <textarea cols="50" rows="10" id="input_etc"></textarea>
-        </div>
-        <!-- 등록 버튼 -->
-        <div>
-            <button type="button" onclick="regis_photo()">
-                등록
-            </button>
-        </div>
-    </div>
 </body>
 
 </html>

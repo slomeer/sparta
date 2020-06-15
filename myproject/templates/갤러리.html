@@ -7,9 +7,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 
+    <style>
+        /* 검색 기능 부트스트랩 */
+        #searchAllDiv {
+            margin: 0 auto;
+        }
+
+        #searchButton {
+            background-color: #343A40;
+            border-color: #343A40;
+        }
+
+        .navbar .navbar-search .dropdown-menu {
+            min-width: 25px;
+        }
+
+        .dropdown-menu .label-icon {
+            margin-left: 5px;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: inherit;
+            transition: all .5s;
+        }
+
+        /* 검색 기능 부트스트랩 */
+
+        /* 네모난 갤러리들 전체 틀 */
+        #gallery {
+            margin-top: 50px;
+        }
+    </style>
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -37,7 +72,7 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         photos = response['photos'];
-                        for(let i=0; i<photos.length; i++) {
+                        for (let i = 0; i < photos.length; i++) {
                             make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
                         }
                     } else {
@@ -50,6 +85,69 @@
         $(document).ready(function () {
             listing();
         })
+
+        // 시/도, 시/군/구 범위 기준 검색하여 갤러리에 표시하기
+        function searchListing() {
+            let keyword = $('#keyword').val();
+            console.log(keyword)
+            $('#gallery').html('');
+
+            if (keyword == '') {
+                listing();
+            } else if (keyword != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:5000/gallery",
+                    data: {},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            photos = response['photos'];
+
+                            for (let i = 0; i < photos.length; i++) {
+                                photos_siDoh = photos[i]['siDoh'];
+                                photos_siGoonGu = photos[i]['siGoonGu'];
+
+                                if (keyword.includes('충청북도')) {
+                                    if (photos_siDoh == '충북') {
+                                        make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                                    }
+                                }
+                                if (keyword.includes('충청남도')) {
+                                    if (photos_siDoh == '충남') {
+                                        make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                                    }
+                                }
+                                if (keyword.includes('전라북도')) {
+                                    if (photos_siDoh == '전북') {
+                                        make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                                    }
+                                }
+                                if (keyword.includes('전라남도')) {
+                                    if (photos_siDoh == '전남') {
+                                        make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                                    }
+                                }
+                                if (keyword.includes('경상북도')) {
+                                    if (photos_siDoh == '경북') {
+                                        make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                                    }
+                                }
+                                if (keyword.includes('경상남도')) {
+                                    if (photos_siDoh == '경남') {
+                                        make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                                    }
+                                }
+                                if (keyword.includes(photos_siDoh) || keyword.includes(photos_siGoonGu.substring(0, 2))) {
+                                    make_one_photo(photos[i]['photo_uuid'], photos[i]['photo']);
+                                }
+                            }
+                        } else {
+                            alert("실패")
+                        }
+                    }
+                })
+            }
+        }
     </script>
     <title>갤러리</title>
 </head>
@@ -76,7 +174,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="http://localhost:5000/login">Log In</a>
                 </li>
             </ul>
         </div>
@@ -90,6 +188,29 @@
         <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">Gallery</h1>
 
         <hr class="mt-2 mb-5">
+
+        <!-- 시/도, 시/군/구 검색 들어갈 부분 -->
+        <div class="navbar navbar-default">
+            <div class="nav nav-justified navbar-nav" id="searchAllDiv">
+
+                <form class="navbar-form navbar-search" role="search">
+                    <div class="input-group">
+
+                        <input type="text" class="form-control" id="keyword" placeholder="'시/도'나 '시/군/구'로 검색해보세요."
+                            size="60" style="font-size: 30px;">
+
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-search btn-info" id="searchButton"
+                                onclick="searchListing()">
+                                <span class="glyphicon glyphicon-search"></span>
+                                <span class="label-icon" style="font-size: 30px;">검색</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
 
         <div class="row text-center text-lg-left" id="gallery">
             <!-- 갤러리에 들어가는 형식(혹시나 까먹을까봐 주석처리) -->
